@@ -185,7 +185,7 @@ function getCpmDistribution(cpm) {
 }
 
 function sendBidRequestToGa(bid) {
-  if (bid && bid.bidderCode) {
+  if (bid && bid.bidderCode) { utils.logMessage('sendBidRequestToGa ' + JSON.stringify(bid));
     _analyticsQueue.push(function () {
       _eventCount++;
       window[_gaGlobal](_trackerSend, 'event', _category, 'Requests', bid.bidderCode, 1, _disableInteraction);
@@ -198,14 +198,14 @@ function sendBidRequestToGa(bid) {
 
 function sendBidResponseToGa(bid) {
 
-  if (bid && bid.bidderCode) {
+  if (bid && bid.bidderCode) {utils.logMessage('sendBidResponseToGa ' + JSON.stringify(bid));
     _analyticsQueue.push(function () {
       var cpmCents = convertToCents(bid.cpm);
       var bidder = bid.bidderCode;
       if (typeof bid.timeToRespond !== 'undefined' && _enableDistribution) {
         _eventCount++;
         var dis = getLoadTimeDistribution(bid.timeToRespond);
-        window[_gaGlobal](_trackerSend, 'event', 'Prebid.js Load Time Distribution', dis, bidder, 1, _disableInteraction);
+        window[_gaGlobal](_trackerSend, 'event', 'Prebid.js '+bid.adUnitCode+' Load Time Distribution', dis, bidder, 1, _disableInteraction);
       }
 
       if (bid.cpm > 0) {
@@ -213,11 +213,11 @@ function sendBidResponseToGa(bid) {
         var cpmDis = getCpmDistribution(bid.cpm);
         if (_enableDistribution) {
           _eventCount++;
-          window[_gaGlobal](_trackerSend, 'event', 'Prebid.js CPM Distribution', cpmDis, bidder, 1, _disableInteraction);
+          window[_gaGlobal](_trackerSend, 'event', 'Prebid.js '+bid.adUnitCode+' CPM Distribution', cpmDis, bidder, 1, _disableInteraction);
         }
 
-        window[_gaGlobal](_trackerSend, 'event', _category, 'Bids', bidder, cpmCents, _disableInteraction);
-        window[_gaGlobal](_trackerSend, 'event', _category, 'Bid Load Time', bidder, bid.timeToRespond, _disableInteraction);
+        window[_gaGlobal](_trackerSend, 'event', _category+' '+bid.adUnitCode, 'Bids', bidder, cpmCents, _disableInteraction);
+        window[_gaGlobal](_trackerSend, 'event', _category+' '+bid.adUnitCode, 'Bid Load Time', bidder, bid.timeToRespond, _disableInteraction);
       }
     });
   }
@@ -238,11 +238,11 @@ function sendBidTimeouts(timedOutBidders) {
   checkAnalytics();
 }
 
-function sendBidWonToGa(bid) {
+function sendBidWonToGa(bid) {utils.logMessage('sendBidWonToGa ' + JSON.stringify(bid));
   var cpmCents = convertToCents(bid.cpm);
   _analyticsQueue.push(function () {
     _eventCount++;
-    window[_gaGlobal](_trackerSend, 'event', _category, 'Wins', bid.bidderCode, cpmCents, _disableInteraction);
+    window[_gaGlobal](_trackerSend, 'event', _category+' '+bid.adUnitCode, 'Wins', bid.bidderCode, cpmCents, _disableInteraction);
   });
 
   checkAnalytics();
