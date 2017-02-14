@@ -6,7 +6,7 @@ var CriteoAdapter = function CriteoAdapter() {
 
   var _publisherTagUrl = window.location.protocol + '//static.criteo.net/js/ld/publishertag.js';
   var _bidderCode = 'criteo';
-  var _profileId = 125;
+  var _profileId = 6294;
 
   function _callBids(params) {
     if (!window.criteo_pubtag || window.criteo_pubtag instanceof Array) {
