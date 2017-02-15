@@ -96,7 +96,7 @@ var AmazonAdapter = function AmazonAdapter() {
     _logMsg('Handling bid response.');
 
     bids.forEach(function(bid) {
-      var bidAdSize = bid.sizes;
+      var bidAdSize = bid.params.size;
 
       // If A9 did not return an ad for this ad size, or the A9 ads object
       // is unavailable, indicate an ad was not returned.
@@ -139,6 +139,18 @@ var AmazonAdapter = function AmazonAdapter() {
       // Make sure required bid parameters exist.
       var bidParamErrors = false;
       bids.forEach(function(bid) {
+		if(Array.isArray(bid.sizes) && (bid.sizes.length > 0)){		  
+			if(Array.isArray(bid.sizes[0]) && (bid.sizes[0].length > 0)){
+			  bid.params.width = bid.sizes[0][0];
+			  bid.params.height = bid.sizes[0][1];
+			}else{
+			  bid.params.width = bid.sizes[0];
+			  bid.params.height = bid.sizes[1];
+			}
+		}
+		if((bid.params.width !== undefined) && (bid.params.width > 0) && (bid.params.height !== undefined) && (bid.params.height > 0)){
+			bid.params.size = String(bid.params.width).charAt(0)+'x'+String(bid.params.height).charAt(0);
+		}
         _logMsg('Bid: ' + JSON.stringify(bid));
 
         function paramError(paramName) {
@@ -150,13 +162,13 @@ var AmazonAdapter = function AmazonAdapter() {
         if (!bid.params.amazonId) {
           paramError('amazonId');
         }
-        /*if (!bid.params.width) {
+        if (!bid.params.width) {
           paramError('width');
         }
         if (!bid.params.height) {
           paramError('height');
-        }*/
-        if (!bid.sizes) {
+        }
+        if (!bid.params.size) {
           paramError('size');
         }
       });
