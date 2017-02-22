@@ -30,8 +30,7 @@ targeting.getAllTargeting = function(adUnitCode) {
   var targeting = getWinningBidTargeting(adUnitCodes)
       .concat(getAlwaysUseBidTargeting(adUnitCodes))
       .concat($$PREBID_GLOBAL$$._sendAllBids ? getBidLandscapeTargeting(adUnitCodes) : []);
-  utils.logMessage('_sendAllBids'+$$PREBID_GLOBAL$$._sendAllBids);
-  utils.logMessage('targeting'+JSON.stringify(targeting));
+  
   //store a reference of the targeting keys
   targeting.map(adUnitCode => {
     Object.keys(adUnitCode).map(key => {
@@ -42,6 +41,9 @@ targeting.getAllTargeting = function(adUnitCode) {
       });
     });
   });
+  
+  utils.logMessage('_sendAllBids'+$$PREBID_GLOBAL$$._sendAllBids);
+  utils.logMessage('targeting'+JSON.stringify(targeting));
   return targeting;
 };
 
